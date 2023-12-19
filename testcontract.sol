@@ -44,15 +44,26 @@ contract CarOwnership {
         emit OwnerAdded(_owner, _name);
     }
 
-    function getOwnerCar(
+    function getOwnerCars(
         address _owner
-    ) public view returns (string memory, string memory, uint256) {
+    ) public view returns (uint256[] memory) {
+        uint256[] memory ownerCars = new uint256[](totalCars);
+        uint256 counter = 0;
+
         for (uint256 i = 1; i <= totalCars; i++) {
             if (cars[i].owner == _owner) {
-                return (cars[i].make, cars[i].model, cars[i].year);
+                ownerCars[counter] = i;
+                counter++;
             }
         }
-        revert("Owner does not own any car");
+
+        // Create a new smaller array to hold the exact number of cars
+        uint256[] memory result = new uint256[](counter);
+        for (uint256 i = 0; i < counter; i++) {
+            result[i] = ownerCars[i];
+        }
+
+        return result;
     }
 
     function changeOwner(uint256 _carId, address _owner) public {
