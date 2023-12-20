@@ -40,8 +40,18 @@ contract CarOwnership {
     }
 
     function addOwner(string memory _name, address _owner) public {
+        require(bytes(_name).length > 0, "Owner name cannot be empty");
         owners[_owner] = Owner(_name, _owner);
         emit OwnerAdded(_owner, _name);
+    }
+
+    function getOwner(address _owner) public view returns (string memory) {
+        Owner memory owner = owners[_owner];
+        if (bytes(owner.name).length == 0) {
+            return "Owner has not added name yet";
+        } else {
+            return owner.name;
+        }
     }
 
     function getOwnerCars(
@@ -57,7 +67,6 @@ contract CarOwnership {
             }
         }
 
-        // Create a new smaller array to hold the exact number of cars
         uint256[] memory result = new uint256[](counter);
         for (uint256 i = 0; i < counter; i++) {
             result[i] = ownerCars[i];
