@@ -3,12 +3,40 @@ import { AiFillPlayCircle } from "react-icons/ai";
 import { SiEthereum } from "react-icons/si";
 import { BsInfoCircle } from "react-icons/bs";
 
+import { CarOwnershipContext } from "../context/CarOwnershipContext";
 import Loader from "./Loader";
 
-import { CarOwnershipContext } from "../context/CarOwnershipContext";
-
+const Input = ({ placeholder, name, type, value, handleChange }) => {
+  return (
+    <input
+      placeholder={placeholder}
+      name={name}
+      value={value}
+      type={type}
+      onChange={(e) => handleChange(e, name)}
+      className="w-full my-2 rounded-sm p-2 bg-transparent text-white border-none text-sm white-glass"
+    />
+  );
+};
 const Welcome = () => {
-  const { connectWallet, currentAccount } = useContext(CarOwnershipContext);
+  const {
+    connectWallet,
+    currentAccount,
+    formData,
+    handleChange,
+    getOwnerCars,
+  } = useContext(CarOwnershipContext);
+
+  const handleSubmit = (e) => {
+    const { addressOwner } = formData;
+    console.log(addressOwner);
+
+    e.preventDefault();
+
+    if (!addressOwner) return;
+
+    getOwnerCars();
+  };
 
   return (
     <div className="flex w-full justify-center item-center">
@@ -36,6 +64,24 @@ const Welcome = () => {
 
           {/* <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 w-full"></div> */}
         </div>
+      </div>
+      <div className="p-5 sm:w-96 h-40 mr-5 w-full flex flex-col justify-start items-center blue-glass">
+        <h1 className="text-sm font-bold text-white">Look up owner</h1>
+        <Input
+          placeholder="Address Owner"
+          name="addressOwner"
+          type="text"
+          handleChange={handleChange}
+        />
+        <div className="h-[1px] w-full bg-white my-2"></div>
+        <button
+          type="button"
+          className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+          onClick={handleSubmit}
+        >
+          <SiEthereum className="text-white mr-2" />
+          <p className="text-sm text-white text-base font-semibold">Search</p>
+        </button>
       </div>
     </div>
   );

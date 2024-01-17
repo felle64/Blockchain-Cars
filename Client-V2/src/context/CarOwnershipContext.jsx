@@ -5,20 +5,25 @@ import { contractABI, contractAddress } from "../../utils/constants";
 
 export const CarOwnershipContext = React.createContext();
 
-const { ethereum } = window;
-
-const getEthersProvider = () => {
+const ethereum = window.ethereum;
+const ethereumContract = () => {
   const provider = new ethers.providers.Web3Provider(ethereum);
+  console.log(provider);
   const signer = provider.getSigner();
   const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
-  console.log("provider", provider);
-  console.log("signer", signer);
-  console.log("contract", contract);
+  console.log({ contract, signer, provider });
+
+  return contract;
 };
 
 export const CarOwnershipProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState("");
+  const [formData, setFormData] = useState({ addressOwner: "" });
+
+  const handleChange = (e, name) => {
+    setFormData((prevState) => ({ ...prevState, [name]: e.target.value }));
+  };
 
   const checkWalletConnected = async () => {
     try {
@@ -58,6 +63,7 @@ export const CarOwnershipProvider = ({ children }) => {
 
   const addCar = async (car) => {
     try {
+      if (!ethereum) return alert("Please install MetaMask");
     } catch (error) {
       console.log(error);
 
@@ -71,13 +77,39 @@ export const CarOwnershipProvider = ({ children }) => {
 
   const getOwner = async (car) => {};
 
-  const getOwnerCars = async (owner) => {};
+  const getOwnerCars = async (owner) => {
+    try {
+      if (!ethereum) return alert("Please install MetaMask");
+
+      const { addressOwner } = formData;
+      const contract = ethereumContract();
+
+      await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const cars = await contract.getOwnerCars(addressOwner);
+      console.log(cars);
+    } catch (error) {
+      console.log(error);
+
+      throw new Error("no ethereum object");
+    }
+  };
 
   useEffect(() => {
     checkWalletConnected();
   }, []);
   return (
-    <CarOwnershipContext.Provider value={{ connectWallet }}>
+    <CarOwnershipContext.Provider
+      value={{
+        connectWallet,
+        currentAccount,
+        formData,
+        setFormData,
+        handleChange,
+        getOwnerCars,
+      }}
+    >
       {children}
     </CarOwnershipContext.Provider>
   );

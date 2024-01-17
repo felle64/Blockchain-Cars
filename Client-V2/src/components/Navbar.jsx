@@ -18,9 +18,6 @@ const Navbar = () => {
         {["Home", "Services", "Transactions"].map((item, index) => (
           <NavbarItem key={item + index} title={item} />
         ))}
-        <li className="bg-[#2952e3] py-2 px-4 mx-4 rounded-md cursor-pointer hover:bg-[#2546bd]">
-          Login
-        </li>
       </ul>
       <div className="flex relative">
         {showMenu && (
