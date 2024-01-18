@@ -17,12 +17,25 @@ const ethereumContract = () => {
   return contract;
 };
 
+const initialFormData = {
+  makeCar: "",
+  modelCar: "",
+  yearCar: 0,
+  carId: 0,
+  addressOwner: "",
+  addOwnerName: "",
+};
+
 export const CarOwnershipProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState("");
-  const [formData, setFormData] = useState({ addressOwner: "" });
+  const [formData, setFormData] = useState(initialFormData);
+  const [carsData, setCarsData] = useState([]);
 
   const handleChange = (e, name) => {
-    setFormData((prevState) => ({ ...prevState, [name]: e.target.value }));
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: e.target.value,
+    }));
   };
 
   const checkWalletConnected = async () => {
@@ -64,6 +77,20 @@ export const CarOwnershipProvider = ({ children }) => {
   const addCar = async (car) => {
     try {
       if (!ethereum) return alert("Please install MetaMask");
+
+      const { makeCar, modelCar, yearCar, addressOwner } = formData;
+      const contract = ethereumContract();
+
+      await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const cars = await contract.addCar(
+        makeCar,
+        modelCar,
+        yearCar,
+        addressOwner
+      );
+      console.log(cars);
     } catch (error) {
       console.log(error);
 
@@ -71,7 +98,45 @@ export const CarOwnershipProvider = ({ children }) => {
     }
   };
 
-  const addOwner = async (owner) => {};
+  const getCarId = async (car) => {
+    try {
+      if (!ethereum) return alert("Please install MetaMask");
+
+      const { carId } = formData;
+      const contract = ethereumContract();
+
+      await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const cars = await contract.cars(carId);
+      console.log(cars);
+
+      setCarsData(cars);
+    } catch (error) {
+      console.log(error);
+
+      throw new Error("no ethereum object");
+    }
+  };
+
+  const addOwner = async (owner) => {
+    try {
+      if (!ethereum) return alert("Please install MetaMask");
+
+      const { addOwnerName, addressOwner } = formData;
+      const contract = ethereumContract();
+
+      await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const cars = await contract.addOwner(addOwnerName, addressOwner);
+      console.log(cars);
+    } catch (error) {
+      console.log(error);
+
+      throw new Error("no ethereum object");
+    }
+  };
 
   const changeOwner = async (car, owner) => {};
 
@@ -108,6 +173,11 @@ export const CarOwnershipProvider = ({ children }) => {
         setFormData,
         handleChange,
         getOwnerCars,
+        addCar,
+        getCarId,
+        addOwner,
+        carsData,
+        setCarsData,
       }}
     >
       {children}

@@ -1,6 +1,20 @@
 import React, { useContext } from "react";
+import {} from "ethers/lib/utils";
 
 import { CarOwnershipContext } from "../../context/CarOwnershipContext";
+
+const Input = ({ placeholder, name, type, value, handleChange }) => {
+  return (
+    <input
+      placeholder={placeholder}
+      name={name}
+      value={value}
+      type={type}
+      onChange={(e) => handleChange(e, name)}
+      className="w-full my-2 rounded-sm p-2 bg-transparent text-white border-none text-sm white-glass"
+    />
+  );
+};
 
 const Services = () => {
   const {
@@ -9,19 +23,48 @@ const Services = () => {
     formData,
     handleChange,
     getOwnerCars,
+    addCar,
+    getCarId,
+    addOwner,
+    carsData,
+    setCarsData,
   } = useContext(CarOwnershipContext);
 
-  const Input = ({ placeholder, name, type, value, handleChange }) => {
-    return (
-      <input
-        placeholder={placeholder}
-        name={name}
-        value={value}
-        type={type}
-        onChange={(e) => handleChange(e, name)}
-        className="w-full my-2 rounded-sm p-2 bg-transparent text-white border-none text-sm white-glass"
-      />
-    );
+  const handleSubmitCar = (e) => {
+    const { makeCar, modelCar, yearCar, addressOwner } = formData;
+    console.log(makeCar, modelCar, yearCar, addressOwner);
+
+    e.preventDefault();
+
+    if (!makeCar || !modelCar || !yearCar || !addressOwner) return;
+
+    addCar();
+  };
+
+  const handleSubmitCarId = async (e) => {
+    const { carId } = formData;
+    console.log(carId);
+    e.preventDefault();
+
+    if (!carId) return;
+
+    try {
+      await getCarId();
+      console.log(carsData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmitAddOwner = (e) => {
+    const { addOwnerName, addressOwner } = formData;
+    console.log(addOwnerName, addressOwner);
+
+    e.preventDefault();
+
+    if (!addOwnerName || !addressOwner) return;
+
+    addOwner();
   };
 
   return (
@@ -46,43 +89,106 @@ const Services = () => {
           placeholder="Make"
           name="makeCar"
           type="text"
-          handleChange={() => {}}
+          //value={formData.makeCar}
+          handleChange={handleChange}
         />
         <Input
           placeholder="Model"
           name="modelCar"
           type="text"
-          handleChange={() => {}}
+          //value={formData.modelCar}
+          handleChange={handleChange}
         />
         <Input
           placeholder="Year"
           name="yearCar"
-          type="text"
-          handleChange={() => {}}
+          type="number"
+          //value={formData.yearCar}
+          handleChange={handleChange}
         />
         <Input
           placeholder="Address Owner"
           name="addressOwner"
           type="text"
-          handleChange={() => {}}
+          // value={formData.addressOwner}
+          handleChange={handleChange}
         />
+        <div className="h-[1px] w-full bg-white my-2"></div>
+        <button
+          type="button"
+          className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+          onClick={handleSubmitCar}
+        >
+          Add car
+        </button>
       </div>
-      <div className="p-5 sm:w-96 h-40 mt-20 mr-5 w-full flex flex-col justify-start items-center blue-glass">
-        <h1 className="text-sm font-bold text-white">Add Owner Name</h1>
+      <div className="p-5 sm:w-96 mt-20 mr-5 w-full flex flex-col justify-start items-center blue-glass">
+        <h1 className="text-sm font-bold text-white">
+          Link Owners name to address
+        </h1>
         <Input
           placeholder="Add Owner Name"
           name="addOwnerName"
           type="text"
-          handleChange={() => {}}
+          handleChange={handleChange}
         />
         <Input
           placeholder="Address Owner"
           name="addressOwner"
           type="text"
-          handleChange={() => {}}
+          handleChange={handleChange}
         />
+        <div className="h-[1px] w-full bg-white my-2"></div>
+        <button
+          type="button"
+          className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+          onClick={handleSubmitAddOwner}
+        >
+          Link Owners Name
+        </button>
       </div>
-      <div className="p-5 sm:w-96 h-40  mr-5 w-full flex flex-col justify-start items-center blue-glass">
+      <div className="p-5 sm:w-96 h-50 mb-10  mr-5 w-full flex flex-col justify-start items-center blue-glass">
+        <h1 className="text-sm font-bold text-white">Look up car by Id</h1>
+        <Input
+          placeholder="Car Id"
+          name="carId"
+          type="number"
+          handleChange={handleChange}
+        />
+        <button
+          type="button"
+          className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+          onClick={handleSubmitCarId}
+        >
+          Look up car
+        </button>
+        {carsData && (
+          <div className="mt-4">
+            <p>Car Make: {carsData[0]}</p>
+            <p>Car Model: {carsData[1]}</p>
+            <p>Car Year: {carsData[2].toString()}</p>
+            <p>Car Owner: {carsData[3]}</p>
+          </div>
+        )}
+      </div>
+
+      <div className="p-5 sm:w-96 h-100 mt-10 mr-5 w-full flex flex-col justify-start items-center blue-glass">
+        <h1 className="text-sm font-bold text-white">Look up owner</h1>
+        <Input
+          placeholder="Address Owner"
+          name="addressOwner"
+          type="text"
+          handleChange={handleChange}
+        />
+        <button
+          type="button"
+          className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+          onClick={handleSubmitCarId}
+        >
+          Look up owner
+        </button>
+      </div>
+      <div className="p-5 sm:w-96 h-40 mr-5 w-full flex flex-col justify-start items-center blue-glass">
         <h1 className="text-sm font-bold text-white">Look up owner</h1>
         <Input
           placeholder="Address Owner"
@@ -91,26 +197,8 @@ const Services = () => {
           handleChange={() => {}}
         />
       </div>
-      <div className="p-5 sm:w-96 h-100 mt-20 mr-5 w-full flex flex-col justify-start items-center blue-glass">
+      <div className="p-5 sm:w-96 h-40 mt-10 mr-5 w-full flex flex-col justify-start items-center blue-glass">
         <h1 className="text-sm font-bold text-white">Look up owner</h1>
-        <Input
-          placeholder="Address Owner"
-          name="addressOwner"
-          type="text"
-          handleChange={() => {}}
-        />
-        <Input
-          placeholder="Address Owner"
-          name="addressOwner"
-          type="text"
-          handleChange={() => {}}
-        />
-        <Input
-          placeholder="Address Owner"
-          name="addressOwner"
-          type="text"
-          handleChange={() => {}}
-        />
         <Input
           placeholder="Address Owner"
           name="addressOwner"
