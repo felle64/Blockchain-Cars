@@ -18,35 +18,31 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.gradient-bg-welcome {
-  background-color: #0083eeb9;
-  background-image: radial-gradient(
-      at 0% 0%,
-      hsla(253, 16%, 7%, 1) 0,
-      transparent 50%
-    ),
-    radial-gradient(at 50% 0%, rgb(255, 255, 255) 0, transparent 50%),
-    radial-gradient(at 100% 0%, rgb(9, 101, 104) 0, transparent 50%);
-}
-
-.gradient-bg-services {
-  background-color: #0f0e13;
-  background-image: radial-gradient(
-      at 0% 0%,
-      hsla(253, 16%, 7%, 1) 0,
-      transparent 50%
-    ),
-    radial-gradient(at 50% 100%, hsla(225, 39%, 25%, 1) 0, transparent 50%);
-}
-
-.gradient-bg-transactions {
+.gradient-bg-general {
   background-color: #0f0e13;
   background-image: radial-gradient(
       at 0% 100%,
-      hsla(253, 16%, 7%, 1) 0,
-      transparent 50%
+      rgba(0, 131, 238, 0.73) 0,
+      transparent 0%
     ),
-    radial-gradient(at 50% 0%, hsla(225, 39%, 25%, 1) 0, transparent 50%);
+    radial-gradient(at 50% 50%, rgb(4, 185, 176) 0, transparent 70%);
+}
+
+.gradient-bg-welcome {
+  background-color: #000000b9;
+  background-image: radial-gradient(at 0% 0%, rgb(0, 0, 0) 0, transparent 50%),
+    radial-gradient(at 0% 0%, rgb(11, 233, 196) 0, transparent 70%),
+    radial-gradient(at 100% 100%, rgb(0, 160, 152) 0, transparent 70%);
+}
+
+.gradient-bg-services {
+  background-color: #0083eeb9;
+  background-image: radial-gradient(
+      at 0% 0%,
+      rgba(0, 131, 238, 0.73) 0,
+      transparent 0%
+    ),
+    radial-gradient(at 50% 100%, rgb(255, 255, 255) 0, transparent 50%);
 }
 
 .gradient-bg-footer {

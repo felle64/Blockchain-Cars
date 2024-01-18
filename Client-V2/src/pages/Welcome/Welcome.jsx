@@ -3,8 +3,7 @@ import { AiFillPlayCircle } from "react-icons/ai";
 import { SiEthereum } from "react-icons/si";
 import { BsInfoCircle } from "react-icons/bs";
 
-import { CarOwnershipContext } from "../context/CarOwnershipContext";
-import Loader from "./Loader";
+import { CarOwnershipContext } from "../../context/CarOwnershipContext";
 
 const Input = ({ placeholder, name, type, value, handleChange }) => {
   return (
@@ -44,12 +43,12 @@ const Welcome = () => {
         <div className="flex flex-1 justify-start items-start flex-col md:mr">
           <h1 className="text-5xl font-bold text-white">
             Welcome to{" "}
-            <span className="text-gradient py-12">Car Ownership </span>
-            on Chain!
+            <span className="text-gradient py-20">Car Ownership on Chain!</span>
           </h1>
           <p className="text-2xl text-white text-base font-light">
-            A decentralized application add owners, add cars and changes owners.
-            With all the history of ownership on the car available
+            A decentralized application were you can add owners, add cars and
+            changes owners. With all the history of ownership on the car
+            available
           </p>
           {!currentAccount && (
             <button
@@ -61,11 +60,9 @@ const Welcome = () => {
               <p className="text-white text-base font-semibold">Login</p>
             </button>
           )}
-
-          {/* <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 w-full"></div> */}
         </div>
       </div>
-      <div className="p-5 sm:w-96 h-40 mr-5 w-full flex flex-col justify-start items-center blue-glass">
+      <div className="p-5 sm:w-96 h-40 mt-10 mr-5 w-full flex flex-col justify-start items-center blue-glass">
         <h1 className="text-sm font-bold text-white">Look up owner</h1>
         <Input
           placeholder="Address Owner"
@@ -80,7 +77,7 @@ const Welcome = () => {
           onClick={handleSubmit}
         >
           <SiEthereum className="text-white mr-2" />
-          <p className="text-sm text-white text-base font-semibold">Search</p>
+          <p className="text-sm text-white font-semibold">Search</p>
         </button>
       </div>
     </div>
