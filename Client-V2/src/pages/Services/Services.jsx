@@ -30,6 +30,8 @@ const Services = () => {
     getOwnerCarId,
     ownedCars,
     changeOwner,
+    getOwner,
+    ownerName,
   } = useContext(CarOwnershipContext);
 
   const [searchResults, setSearchResults] = useState([]);
@@ -117,6 +119,17 @@ const Services = () => {
     changeOwner();
   };
 
+  const handleSubmitOwnerName = (e) => {
+    const { addressOwner } = formData;
+    console.log(addressOwner);
+
+    e.preventDefault();
+
+    if (!addressOwner) return;
+
+    getOwner();
+  };
+
   return (
     <div className="flex flex-wrap justify-center item-center">
       <div className="flex md:flexrow flex-col items-start justify-between md:p-20 py-10 -px-6">
@@ -159,7 +172,7 @@ const Services = () => {
           type="text"
           handleChange={handleChange}
         />
-        <div className="h-[1px] w-full bg-white my-2"></div>
+        <div className="h-[1px] w-full my-2"></div>
         <button
           type="button"
           className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
@@ -184,7 +197,7 @@ const Services = () => {
           type="text"
           handleChange={handleChange}
         />
-        <div className="h-[1px] w-full bg-white my-2"></div>
+        <div className="h-[1px] w-full my-2"></div>
         <button
           type="button"
           className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
@@ -226,7 +239,7 @@ const Services = () => {
       </div>
 
       <div className="p-5 sm:w-96 h-100 mt-10 mr-5 w-full flex flex-col justify-start items-center blue-glass">
-        <h1 className="text-sm font-bold text-white">Look up owner</h1>
+        <h1 className="text-sm font-bold text-white">Look up owners cars</h1>
         <Input
           placeholder="Address Owner"
           name="addressOwner"
@@ -238,10 +251,10 @@ const Services = () => {
           className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
           onClick={handleSubmitGetOwnerCars}
         >
-          Look up owner
+          Look up cars
         </button>
         <div
-          className={`w-full mt-2 flex flex-col justify-start items-start blue-glass`}
+          className={`w-full mt-2 flex flex-col justify-start items-start`}
           style={{ height: `${searchResults.length * 3}rem` }}
         >
           {searchResults.length !== 0 && (
@@ -258,14 +271,26 @@ const Services = () => {
           ))}
         </div>
       </div>
-      <div className="p-5 sm:w-96 h-40 mr-5 w-full flex flex-col justify-start items-center blue-glass">
-        <h1 className="text-sm font-bold text-white">Look up owner</h1>
+      <div className="p-5 sm:w-96 h-50 mb-10 mr-5 w-full flex flex-col justify-start items-center blue-glass">
+        <h1 className="text-sm font-bold text-white">Look up owner name</h1>
         <Input
           placeholder="Address Owner"
           name="addressOwner"
           type="text"
-          handleChange={() => {}}
+          handleChange={handleChange}
         />
+        <button
+          type="button"
+          className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+          onClick={handleSubmitOwnerName}
+        >
+          Look up name
+        </button>
+        {ownerName.length !== [].length && (
+          <div className="mt-4 ">
+            <p className="text-white">Owner Name: {ownerName}</p>
+          </div>
+        )}
       </div>
       <div className="p-5 sm:w-96 h 50 mt-10 mr-5 w-full flex flex-col justify-start items-center blue-glass">
         <h1 className="text-sm font-bold text-white">Change Owner</h1>
@@ -292,7 +317,7 @@ const Services = () => {
           className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
           onClick={handleSubmitChangeOwner}
         >
-          Look up car
+          Change Owner
         </button>
       </div>
     </div>

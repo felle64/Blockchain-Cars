@@ -65,7 +65,7 @@ const Welcome = () => {
   };
 
   return (
-    <div className="flex w-full justify-center item-center">
+    <div className="flex flex-col h-screen justify-center items-center">
       <div className="flex md:flexrow flex-col items-start justify-between md:p-20 py-10 -px-6">
         <div className="flex flex-1 justify-start items-start flex-col md:mr">
           <h1 className="text-5xl font-bold text-white">
@@ -73,9 +73,9 @@ const Welcome = () => {
             <span className="text-gradient py-20">Car Ownership on Chain!</span>
           </h1>
           <p className="text-2xl text-white text-base font-light">
-            A decentralized application were you can add owners, add cars and
-            changes owners. With all the history of ownership on the car
-            available
+            A decentralized application where you can add owners, add cars, and
+            change owners, with all the history of ownership on the car
+            available.
           </p>
           {!currentAccount && (
             <button
@@ -89,7 +89,7 @@ const Welcome = () => {
           )}
         </div>
       </div>
-      <div className="p-5 sm:w-96 h-40 mt-10 mr-5 w-full flex flex-col justify-start items-center blue-glass">
+      <div className="p-5 sm:w-96 h-40 mr-5 w-full flex flex-col justify-start items-center blue-glass">
         <h1 className="text-sm font-bold text-white">Look up owner</h1>
         <Input
           placeholder="Address Owner"
@@ -113,7 +113,7 @@ const Welcome = () => {
       >
         <h1 className="text-sm font-bold text-white">Search Results</h1>
         {searchResults.map((result, index) => (
-          <div key={index} className="mt-1 ">
+          <div key={index} className="mt-1">
             <p className="text-white">
               {result.make}, {result.model}, {result.year.toString()}
             </p>
