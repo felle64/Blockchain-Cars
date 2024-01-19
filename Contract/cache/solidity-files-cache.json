@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\Felkan1\\Documents\\1privatedev\\Blockchain-Cars\\Contract\\contracts\\CarOwnership.sol": {
-      "lastModificationDate": 1705187310387,
-      "contentHash": "5d9ff430c073240ce5b905e474deb8a0",
+      "lastModificationDate": 1705622269695,
+      "contentHash": "81fc7d1c4df442a81e6701564b5fc61f",
       "sourceName": "contracts/CarOwnership.sol",
       "solcConfig": {
         "version": "0.8.19",

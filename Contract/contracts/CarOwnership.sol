@@ -28,8 +28,11 @@ contract CarOwnership {
 
     event OwnerAdded(address owner, string name);
 
-    event OwnershipTransferred(uint256 carId, address previousOwner, address newOwner);
-
+    event OwnershipTransferred(
+        uint256 carId,
+        address previousOwner,
+        address newOwner
+    );
 
     function addCar(
         string memory _make,
@@ -80,9 +83,14 @@ contract CarOwnership {
 
     function changeOwner(uint256 _carId, address _newOwner) public {
         require(_carId <= totalCars, "Invalid car ID");
-    address previousOwner = cars[_carId].owner;
-    cars[_carId].owner = _newOwner;
-    emit OwnershipTransferred(_carId, previousOwner, _newOwner);
-}
 
+        require(
+            msg.sender == cars[_carId].owner,
+            "You are not the current owner of this car"
+        );
+
+        address previousOwner = cars[_carId].owner;
+        cars[_carId].owner = _newOwner;
+        emit OwnershipTransferred(_carId, previousOwner, _newOwner);
+    }
 }

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {} from "ethers/lib/utils";
 
 import { CarOwnershipContext } from "../../context/CarOwnershipContext";
@@ -27,8 +27,12 @@ const Services = () => {
     getCarId,
     addOwner,
     carsData,
-    setCarsData,
+    getOwnerCarId,
+    ownedCars,
+    changeOwner,
   } = useContext(CarOwnershipContext);
+
+  const [searchResults, setSearchResults] = useState([]);
 
   const handleSubmitCar = (e) => {
     const { makeCar, modelCar, yearCar, addressOwner } = formData;
@@ -44,6 +48,7 @@ const Services = () => {
   const handleSubmitCarId = async (e) => {
     const { carId } = formData;
     console.log(carId);
+    console.log(carsData);
     e.preventDefault();
 
     if (!carId) return;
@@ -65,6 +70,51 @@ const Services = () => {
     if (!addOwnerName || !addressOwner) return;
 
     addOwner();
+  };
+
+  const handleSubmitGetOwnerCars = async (e) => {
+    e.preventDefault();
+
+    const { addressOwner } = formData;
+    console.log(addressOwner);
+
+    const carIds = typeof ownedCars === "string" ? ownedCars.split(",") : [];
+    const results = [];
+
+    try {
+      // Use Promise.all to wait for all async operations to complete
+      await Promise.all(
+        carIds.map(async (carId) => {
+          try {
+            console.log(`Processing carId: ${carId}`);
+            const result = await getOwnerCarId(carId);
+            results.push(result);
+            console.log(`Successfully processed carId: ${carId}`);
+          } catch (error) {
+            console.error(`Error processing carId ${carId}:`, error);
+          }
+        })
+      );
+
+      setSearchResults(results);
+      console.log(results);
+
+      if (!addressOwner) return;
+      getOwnerCars();
+    } catch (error) {
+      console.error("Error processing carIds:", error);
+    }
+  };
+
+  const handleSubmitChangeOwner = (e) => {
+    const { carId, newAddressOwner, addressOwner } = formData;
+    console.log(carId, newAddressOwner, addressOwner);
+
+    e.preventDefault();
+
+    if (!carId || !newAddressOwner || !addressOwner) return;
+
+    changeOwner();
   };
 
   return (
@@ -89,28 +139,24 @@ const Services = () => {
           placeholder="Make"
           name="makeCar"
           type="text"
-          //value={formData.makeCar}
           handleChange={handleChange}
         />
         <Input
           placeholder="Model"
           name="modelCar"
           type="text"
-          //value={formData.modelCar}
           handleChange={handleChange}
         />
         <Input
           placeholder="Year"
           name="yearCar"
           type="number"
-          //value={formData.yearCar}
           handleChange={handleChange}
         />
         <Input
           placeholder="Address Owner"
           name="addressOwner"
           type="text"
-          // value={formData.addressOwner}
           handleChange={handleChange}
         />
         <div className="h-[1px] w-full bg-white my-2"></div>
@@ -162,12 +208,19 @@ const Services = () => {
         >
           Look up car
         </button>
-        {carsData && (
+        {carsData.length !== [].length && (
           <div className="mt-4">
-            <p>Car Make: {carsData[0]}</p>
-            <p>Car Model: {carsData[1]}</p>
-            <p>Car Year: {carsData[2].toString()}</p>
-            <p>Car Owner: {carsData[3]}</p>
+            <p className="text-white">Car Make: {carsData[0]}</p>
+            <p className="text-white">Car Model: {carsData[1]}</p>
+            <p>
+              {" "}
+              <p className="text-white">
+                Car Year:{" "}
+                {carsData[2] !== null ? carsData[2].toString() : "N/A"}
+              </p>
+            </p>
+            <p className="text-white ">Car Owner:</p>
+            <p className="text-white text-xs"> {carsData[3]}</p>
           </div>
         )}
       </div>
@@ -183,10 +236,27 @@ const Services = () => {
         <button
           type="button"
           className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
-          onClick={handleSubmitCarId}
+          onClick={handleSubmitGetOwnerCars}
         >
           Look up owner
         </button>
+        <div
+          className={`w-full mt-2 flex flex-col justify-start items-start blue-glass`}
+          style={{ height: `${searchResults.length * 3}rem` }}
+        >
+          {searchResults.length !== 0 && (
+            <h1 className="text-sm font-bold text-white ml-2 mt-2">
+              Search Results
+            </h1>
+          )}
+          {searchResults.map((result, index) => (
+            <div key={index} className="mt-1 ">
+              <p className="text-white ml-2">
+                {result.make}, {result.model}, {result.year.toString()}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
       <div className="p-5 sm:w-96 h-40 mr-5 w-full flex flex-col justify-start items-center blue-glass">
         <h1 className="text-sm font-bold text-white">Look up owner</h1>
@@ -197,14 +267,33 @@ const Services = () => {
           handleChange={() => {}}
         />
       </div>
-      <div className="p-5 sm:w-96 h-40 mt-10 mr-5 w-full flex flex-col justify-start items-center blue-glass">
-        <h1 className="text-sm font-bold text-white">Look up owner</h1>
+      <div className="p-5 sm:w-96 h 50 mt-10 mr-5 w-full flex flex-col justify-start items-center blue-glass">
+        <h1 className="text-sm font-bold text-white">Change Owner</h1>
         <Input
-          placeholder="Address Owner"
+          placeholder="Car Id"
+          name="carId"
+          type="number"
+          handleChange={handleChange}
+        />
+        <Input
+          placeholder="Old Owner Address"
           name="addressOwner"
           type="text"
-          handleChange={() => {}}
+          handleChange={handleChange}
         />
+        <Input
+          placeholder="New Owner Address"
+          name="newAddressOwner"
+          type="text"
+          handleChange={handleChange}
+        />
+        <button
+          type="button"
+          className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+          onClick={handleSubmitChangeOwner}
+        >
+          Look up car
+        </button>
       </div>
     </div>
   );

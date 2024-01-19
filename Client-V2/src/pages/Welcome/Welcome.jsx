@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
 import { SiEthereum } from "react-icons/si";
 import { BsInfoCircle } from "react-icons/bs";
@@ -24,17 +24,44 @@ const Welcome = () => {
     formData,
     handleChange,
     getOwnerCars,
+    ownedCars,
+    getOwnerCarId,
   } = useContext(CarOwnershipContext);
 
-  const handleSubmit = (e) => {
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     const { addressOwner } = formData;
     console.log(addressOwner);
 
-    e.preventDefault();
+    const carIds = typeof ownedCars === "string" ? ownedCars.split(",") : [];
+    const results = [];
 
-    if (!addressOwner) return;
+    try {
+      // Use Promise.all to wait for all async operations to complete
+      await Promise.all(
+        carIds.map(async (carId) => {
+          try {
+            console.log(`Processing carId: ${carId}`);
+            const result = await getOwnerCarId(carId);
+            results.push(result);
+            console.log(`Successfully processed carId: ${carId}`);
+          } catch (error) {
+            console.error(`Error processing carId ${carId}:`, error);
+          }
+        })
+      );
 
-    getOwnerCars();
+      setSearchResults(results);
+      console.log(results);
+
+      if (!addressOwner) return;
+      getOwnerCars();
+    } catch (error) {
+      console.error("Error processing carIds:", error);
+    }
   };
 
   return (
@@ -79,6 +106,19 @@ const Welcome = () => {
           <SiEthereum className="text-white mr-2" />
           <p className="text-sm text-white font-semibold">Search</p>
         </button>
+      </div>
+      <div
+        className={`p-5 sm:w-96 mt-10 pb-20 mr-5 w-full flex flex-col justify-start items-center blue-glass`}
+        style={{ height: `${searchResults.length * 3}rem` }}
+      >
+        <h1 className="text-sm font-bold text-white">Search Results</h1>
+        {searchResults.map((result, index) => (
+          <div key={index} className="mt-1 ">
+            <p className="text-white">
+              {result.make}, {result.model}, {result.year.toString()}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );
