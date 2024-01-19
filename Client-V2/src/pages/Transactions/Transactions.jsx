@@ -1,28 +1,48 @@
 import React, { useContext, useState, useEffect } from "react";
-
 import { CarOwnershipContext } from "../../context/CarOwnershipContext";
+import { AiFillPlayCircle } from "react-icons/ai";
+import { SiEthereum } from "react-icons/si";
 
-const TransactionsBox = () => {};
-const Transactions = () => {
-  const { currentAccount } = useContext(CarOwnershipContext);
+const Transaction = () => {
+  const {
+    currentAccount,
+    getOwnerCars,
+    getTransactionHistory,
+    formData,
+    carId,
+    getAllTransactions,
+  } = useContext(CarOwnershipContext);
+
+  const [transactionHistory, setTransactionHistory] = useState([]);
+
+  const handleFetchTransactions = async (e) => {
+    try {
+      const result = await getAllTransactions();
+      console.log("Transaction History:", result.toString());
+      setTransactionHistory(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
-    <div className="flex flex-wrap h-screen justify-center item-center">
-      <div className="flex md:flexrow flex-col items-start justify-between md:p-20 py-10 -px-6">
-        <div className="flex justify-start items-start flex-col md:mr">
-          <h1 className="text-5xl font-bold text-white">
-            <span className="text-gradient py-12 justify-center">
-              Transactions
-            </span>
-          </h1>
-          <p className="text-2xl text-white text-base font-light">
-            View your transactions
-          </p>
-        </div>
-        <div className="flex justify-center items-center flex-col"></div>
+    <div className="flex flex-col h-screen justify-center items-center">
+      <h1 className="text-5xl font-bold text-white text-gradient py-20 mb-4">
+        Transaction History
+      </h1>
+
+      <div>
+        <button
+          type="button"
+          className="flex flex-row justify-center items-center bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+          onClick={handleFetchTransactions}
+        >
+          <SiEthereum className="text-white mr-2" />
+          <p className="text-sm text-white font-semibold">Fetch Transactions</p>
+        </button>
       </div>
     </div>
   );
 };
 
-export default Transactions;
+export default Transaction;

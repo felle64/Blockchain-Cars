@@ -7,6 +7,7 @@ contract CarOwnership {
         string model;
         uint256 year;
         address owner;
+        uint256[] transactionIds;
     }
 
     struct Owner {
@@ -14,9 +15,18 @@ contract CarOwnership {
         address owner;
     }
 
+    struct Transaction {
+        uint256 carId;
+        address previousOwner;
+        address newOwner;
+        uint256 timestamp;
+    }
+
     mapping(uint256 => Car) public cars;
     mapping(address => Owner) public owners;
+    mapping(uint256 => Transaction) public transactions;
     uint256 public totalCars;
+    uint256 public totalTransactions;
 
     event CarAdded(
         uint256 carId,
@@ -34,6 +44,14 @@ contract CarOwnership {
         address newOwner
     );
 
+    event TransactionRecorded(
+        uint256 transactionId,
+        uint256 carId,
+        address previousOwner,
+        address newOwner,
+        uint256 timestamp
+    );
+
     function addCar(
         string memory _make,
         string memory _model,
@@ -41,7 +59,7 @@ contract CarOwnership {
         address _owner
     ) public {
         totalCars++;
-        cars[totalCars] = Car(_make, _model, _year, _owner);
+        cars[totalCars] = Car(_make, _model, _year, _owner, new uint256[](0));
         emit CarAdded(totalCars, _make, _model, _year, _owner);
     }
 
@@ -63,19 +81,19 @@ contract CarOwnership {
     function getOwnerCars(
         address _owner
     ) public view returns (uint256[] memory) {
-        uint256[] memory ownerCars = new uint256[](totalCars);
+        uint256[] memory ownedCars = new uint256[](totalCars);
         uint256 counter = 0;
 
         for (uint256 i = 1; i <= totalCars; i++) {
             if (cars[i].owner == _owner) {
-                ownerCars[counter] = i;
+                ownedCars[counter] = i;
                 counter++;
             }
         }
 
         uint256[] memory result = new uint256[](counter);
         for (uint256 i = 0; i < counter; i++) {
-            result[i] = ownerCars[i];
+            result[i] = ownedCars[i];
         }
 
         return result;
@@ -83,7 +101,6 @@ contract CarOwnership {
 
     function changeOwner(uint256 _carId, address _newOwner) public {
         require(_carId <= totalCars, "Invalid car ID");
-
         require(
             msg.sender == cars[_carId].owner,
             "You are not the current owner of this car"
@@ -91,6 +108,36 @@ contract CarOwnership {
 
         address previousOwner = cars[_carId].owner;
         cars[_carId].owner = _newOwner;
+
+        totalTransactions++;
+        transactions[totalTransactions] = Transaction({
+            carId: _carId,
+            previousOwner: previousOwner,
+            newOwner: _newOwner,
+            timestamp: block.timestamp
+        });
+
+        cars[_carId].transactionIds.push(totalTransactions);
+
         emit OwnershipTransferred(_carId, previousOwner, _newOwner);
+        emit TransactionRecorded(
+            totalTransactions,
+            _carId,
+            previousOwner,
+            _newOwner,
+            block.timestamp
+        );
+    }
+
+    function getAllTransactions() public view returns (Transaction[] memory) {
+        Transaction[] memory allTransactions = new Transaction[](
+            totalTransactions
+        );
+
+        for (uint256 i = 1; i <= totalTransactions; i++) {
+            allTransactions[i - 1] = transactions[i];
+        }
+
+        return allTransactions;
     }
 }

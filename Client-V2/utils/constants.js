@@ -1,4 +1,4 @@
 import abi from "./CarOwnership.json";
 
 export const contractABI = abi.abi;
-export const contractAddress = "0x4D225c2020bFF91484F8C8aF8Dfc5F9e82B880b5";
+export const contractAddress = "0x048C9A372A12F8b307F824920BC09Fd737ac456c";

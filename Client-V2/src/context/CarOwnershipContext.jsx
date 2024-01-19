@@ -250,6 +250,43 @@ export const CarOwnershipProvider = ({ children }) => {
     }
   };
 
+  const getTransactionHistory = async (e) => {
+    try {
+      if (!ethereum) return alert("Please install MetaMask");
+
+      const { carId } = formData;
+
+      const contract = ethereumContract();
+      await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      const result = await contract.transaction(1);
+      console.log("Transaction History:", result);
+      return result;
+    } catch (error) {
+      console.log(error);
+      throw new Error("no ethereum object");
+    }
+  };
+  const getAllTransactions = async () => {
+    try {
+      if (!ethereum) return alert("Please install MetaMask");
+
+      const contract = ethereumContract();
+      await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      const result = await contract.totalTransactions();
+      console.log("All Transactions:", result.toString());
+      return result;
+    } catch (error) {
+      console.error("Error fetching all transactions:", error);
+      throw new Error("No ethereum object");
+    }
+  };
+
   useEffect(() => {
     checkWalletConnected();
   }, []);
@@ -272,6 +309,8 @@ export const CarOwnershipProvider = ({ children }) => {
         changeOwner,
         getOwner,
         ownerName,
+        getTransactionHistory,
+        getAllTransactions,
       }}
     >
       {children}
