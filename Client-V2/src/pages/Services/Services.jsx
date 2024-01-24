@@ -32,6 +32,8 @@ const Services = () => {
     changeOwner,
     getOwner,
     ownerName,
+    setOwnedCars,
+    carsIdArray,
   } = useContext(CarOwnershipContext);
 
   const [searchResults, setSearchResults] = useState([]);
@@ -81,13 +83,14 @@ const Services = () => {
     console.log(addressOwner);
 
     const carIds = typeof ownedCars === "string" ? ownedCars.split(",") : [];
+    setOwnedCars(ownedCars);
     const results = [];
 
     try {
-      // Use Promise.all to wait for all async operations to complete
       await Promise.all(
         carIds.map(async (carId) => {
           try {
+            console.log(ownedCars);
             console.log(`Processing carId: ${carId}`);
             const result = await getOwnerCarId(carId);
             results.push(result);
@@ -181,7 +184,7 @@ const Services = () => {
           Add car
         </button>
       </div>
-      <div className="p-5 sm:w-96 mt-20 mr-5 w-full flex flex-col justify-start items-center blue-glass">
+      <div className="p-5 sm:w-96 mt-20 mb-5 mr-5 w-full flex flex-col justify-start items-center blue-glass">
         <h1 className="text-sm font-bold text-white">
           Link Owners name to address
         </h1>
@@ -265,7 +268,8 @@ const Services = () => {
           {searchResults.map((result, index) => (
             <div key={index} className="mt-1 ">
               <p className="text-white ml-2">
-                {result.make}, {result.model}, {result.year.toString()}
+                {result.make}, {result.model}, {result.year.toString()}, Car ID:{" "}
+                {carsIdArray[index]}
               </p>
             </div>
           ))}

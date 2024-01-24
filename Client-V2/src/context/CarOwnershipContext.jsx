@@ -33,6 +33,7 @@ export const CarOwnershipProvider = ({ children }) => {
   const [carsData, setCarsData] = useState([]);
   const [ownedCars, setOwnedCars] = useState([]);
   const [ownerName, setownerName] = useState([]);
+  const [carsIdArray, setCarsIdArray] = useState([]);
 
   const handleChange = (e, name) => {
     setFormData((prevState) => ({
@@ -241,8 +242,11 @@ export const CarOwnershipProvider = ({ children }) => {
         method: "eth_requestAccounts",
       });
       const cars = await contract.getOwnerCars(addressOwner);
+      const carsIdArray = cars.toString().split(",");
+      setCarsIdArray(carsIdArray);
       setOwnedCars(cars.toString());
-      console.log(cars.toString());
+
+      console.log(carsIdArray);
     } catch (error) {
       console.log(error);
 
@@ -250,37 +254,31 @@ export const CarOwnershipProvider = ({ children }) => {
     }
   };
 
-  const getTransactionHistory = async (e) => {
-    try {
-      if (!ethereum) return alert("Please install MetaMask");
-
-      const { carId } = formData;
-
-      const contract = ethereumContract();
-      await ethereum.request({
-        method: "eth_requestAccounts",
-      });
-
-      const result = await contract.transaction(1);
-      console.log("Transaction History:", result);
-      return result;
-    } catch (error) {
-      console.log(error);
-      throw new Error("no ethereum object");
-    }
-  };
   const getAllTransactions = async () => {
     try {
       if (!ethereum) return alert("Please install MetaMask");
 
       const contract = ethereumContract();
-      await ethereum.request({
-        method: "eth_requestAccounts",
-      });
+      await ethereum.request({ method: "eth_requestAccounts" });
 
-      const result = await contract.totalTransactions();
-      console.log("All Transactions:", result.toString());
-      return result;
+      const totalTransactions = await contract.totalTransactions();
+      const allTransactions = [];
+
+      for (let i = 1; i <= totalTransactions.toNumber(); i++) {
+        const transaction = await contract.transactions(i);
+
+        const transactionData = {
+          carId: transaction.carId.toNumber(),
+          previousOwner: transaction.previousOwner,
+          newOwner: transaction.newOwner,
+          timestamp: transaction.timestamp.toString(),
+        };
+
+        allTransactions.push(transactionData);
+      }
+
+      console.log("All Transactions:", allTransactions);
+      return allTransactions;
     } catch (error) {
       console.error("Error fetching all transactions:", error);
       throw new Error("No ethereum object");
@@ -309,8 +307,9 @@ export const CarOwnershipProvider = ({ children }) => {
         changeOwner,
         getOwner,
         ownerName,
-        getTransactionHistory,
         getAllTransactions,
+        setOwnedCars,
+        carsIdArray,
       }}
     >
       {children}
