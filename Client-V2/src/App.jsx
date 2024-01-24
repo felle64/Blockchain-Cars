@@ -13,11 +13,16 @@ const App = () => {
         <div className="gradient-bg-general">
           <Navbar />
           <Routes>
-            <Route path="/" element={((<WelcomeService />), (<Welcome />))} />
-
-            <Route path="/Home" element={<Welcome />} />
-            <Route path="/Services" element={<Services />} />
-            <Route path="/Transactions" element={<Transactions />} />
+            <Route
+              path="/Blockchain-Cars/"
+              element={((<WelcomeService />), (<Welcome />))}
+            />
+            <Route path="/Blockchain-Cars/Home" element={<Welcome />} />
+            <Route path="/Blockchain-Cars/Services" element={<Services />} />
+            <Route
+              path="/Blockchain-Cars/Transactions"
+              element={<Transactions />}
+            />
           </Routes>
         </div>
         <div className="h-20">

@@ -5,12 +5,13 @@ Welcome to the Car Ownership on Chain decentralized application (DApp)! This DAp
 ## Features
 
 - **Decentralized Ownership Management:** Users can add new owners, cars, and change owners securely on the blockchain.
-- **Transaction History:** View the history of ownership changes and transactions.
+- **Transaction History:** View the history of ownership changes.
 
 ## Technologies Used
 
-- React
-- Ethereum (Web3.js, Ethers.js)
+- React + Vite
+- Tailwind CSS
+- Ethereum (Ethers.js)
 - Solidity
 
 ## Getting Started
@@ -28,8 +29,8 @@ Welcome to the Car Ownership on Chain decentralized application (DApp)! This DAp
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/car-ownership-dapp.git
-   cd car-ownership-dapp
+   git clone https://github.com/felle64/Blockchain-Cars.git
+   cd Blockchain-Cars/Client-V2
    Install dependencies:
    ```
 
@@ -40,7 +41,7 @@ npm install
 Start the development server:
 
 ```bash
-npm start
+npm run dev
 ```
 
 ### Usage

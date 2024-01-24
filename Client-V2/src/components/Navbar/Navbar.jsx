@@ -8,7 +8,10 @@ import logo from "../../images/logo.png";
 const NavbarItem = ({ title, classProps }) => {
   return (
     <li className={`mx-4 cursor-pointer ${classProps}`}>
-      <Link to={`/${title}`} className="text-white my-2 text-lg">
+      <Link
+        to={`/Blockchain-Cars/${title}`}
+        className="text-white my-2 text-lg"
+      >
         {title}
       </Link>
     </li>
@@ -19,7 +22,7 @@ const Navbar = () => {
   return (
     <nav className="w-full flex md:justify-center justify-between items-center p-4">
       <div className="md:flex[0.5] flex-initial justify-center items-center">
-        <Link to="/">
+        <Link to="/Blockchain-Cars/">
           <img src={logo} alt="logo" className="w-32 cursor-pointer" />
         </Link>
       </div>
