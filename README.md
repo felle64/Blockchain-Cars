@@ -1,6 +1,6 @@
 # Car Ownership on Chain
 
-Welcome to the Car Ownership on Chain decentralized application (DApp)! This DApp allows users to manage car ownership, add owners, add cars, change owners, and view the transaction history on the Ethereum blockchain.
+Welcome to the Car Ownership on Chain decentralized application (DApp)! This DApp allows users to manage car ownership, add owners, add cars, change owners, and view the transaction history on the Ethereum testnet (Sepolia).
 
 ## Features
 
@@ -20,7 +20,9 @@ Welcome to the Car Ownership on Chain decentralized application (DApp)! This DAp
 
 - [MetaMask](https://metamask.io/) extension in your browser
 
-## Installation Locally
+- Go to [Blockchain Cars](https://felle64.github.io/Blockchain-Cars/)
+
+##  Local Installation
 
 ### Prerequisites
 
