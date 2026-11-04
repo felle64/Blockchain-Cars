@@ -6,10 +6,10 @@ import { contractABI, contractAddress } from "../../utils/constants";
 export const CarOwnershipContext = React.createContext();
 
 const ethereum = window.ethereum;
-const ethereumContract = () => {
-  const provider = new ethers.providers.Web3Provider(ethereum);
+const ethereumContract = async () => {
+  const provider = new ethers.BrowserProvider(ethereum);
   console.log(provider);
-  const signer = provider.getSigner();
+  const signer = await provider.getSigner();
   const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
   console.log({ contract, signer, provider });
@@ -83,7 +83,7 @@ export const CarOwnershipProvider = ({ children }) => {
       if (!ethereum) return alert("Please install MetaMask");
 
       const { makeCar, modelCar, yearCar, addressOwner } = formData;
-      const contract = ethereumContract();
+      const contract = await ethereumContract();
 
       await ethereum.request({
         method: "eth_requestAccounts",
@@ -107,7 +107,7 @@ export const CarOwnershipProvider = ({ children }) => {
       if (!ethereum) return alert("Please install MetaMask");
 
       const { carId } = formData;
-      const contract = ethereumContract();
+      const contract = await ethereumContract();
 
       await ethereum.request({
         method: "eth_requestAccounts",
@@ -132,7 +132,7 @@ export const CarOwnershipProvider = ({ children }) => {
     try {
       if (!ethereum) throw new Error("Please install MetaMask");
 
-      const contract = ethereumContract();
+      const contract = await ethereumContract();
 
       await ethereum.request({
         method: "eth_requestAccounts",
@@ -158,7 +158,7 @@ export const CarOwnershipProvider = ({ children }) => {
       if (!ethereum) return alert("Please install MetaMask");
 
       const { addOwnerName, addressOwner } = formData;
-      const contract = ethereumContract();
+      const contract = await ethereumContract();
 
       await ethereum.request({
         method: "eth_requestAccounts",
@@ -179,7 +179,7 @@ export const CarOwnershipProvider = ({ children }) => {
 
       const { carId, addressOwner, newAddressOwner } = formData;
       console.log(carId, addressOwner, newAddressOwner);
-      const contract = ethereumContract();
+      const contract = await ethereumContract();
 
       await ethereum.request({
         method: "eth_requestAccounts",
@@ -216,7 +216,7 @@ export const CarOwnershipProvider = ({ children }) => {
       if (!ethereum) return alert("Please install MetaMask");
 
       const { addressOwner } = formData;
-      const contract = ethereumContract();
+      const contract = await ethereumContract();
 
       await ethereum.request({
         method: "eth_requestAccounts",
@@ -236,7 +236,7 @@ export const CarOwnershipProvider = ({ children }) => {
       if (!ethereum) return alert("Please install MetaMask");
 
       const { addressOwner } = formData;
-      const contract = ethereumContract();
+      const contract = await ethereumContract();
 
       await ethereum.request({
         method: "eth_requestAccounts",
@@ -258,17 +258,17 @@ export const CarOwnershipProvider = ({ children }) => {
     try {
       if (!ethereum) return alert("Please install MetaMask");
 
-      const contract = ethereumContract();
+      const contract = await ethereumContract();
       await ethereum.request({ method: "eth_requestAccounts" });
 
       const totalTransactions = await contract.totalTransactions();
       const allTransactions = [];
 
-      for (let i = 1; i <= totalTransactions.toNumber(); i++) {
+      for (let i = 1; i <= Number(totalTransactions); i++) {
         const transaction = await contract.transactions(i);
 
         const transactionData = {
-          carId: transaction.carId.toNumber(),
+          carId: Number(transaction.carId),
           previousOwner: transaction.previousOwner,
           newOwner: transaction.newOwner,
           timestamp: transaction.timestamp.toString(),

@@ -52,3 +52,18 @@ Connect MetaMask to your Ethereum wallet.
 Explore the features of the DApp:
 Add owners, cars, and change ownership.
 View transaction history.
+
+## Deploying the contract
+
+Requires Node.js 22 or newer.
+
+```bash
+cd Contract
+npm install
+```
+
+Create `Contract/.env` with `API_URL` (your Sepolia RPC URL) and `PRIVATE_KEY` (without the `0x` prefix), then:
+
+```bash
+npm run deploy
+```
