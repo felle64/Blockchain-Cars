@@ -1,20 +1,8 @@
-const main = async () => {
-  const Transactions = await ethers.getContractFactory("CarOwnership");
-  const transactions = await Transactions.deploy();
+import { network } from "hardhat";
 
-  await transactions.deployed();
+const { ethers } = await network.getOrCreate();
 
-  console.log("Transactions deployed to:", transactions.address);
-};
+const transactions = await ethers.deployContract("CarOwnership");
+await transactions.waitForDeployment();
 
-const runMain = async () => {
-  try {
-    await main();
-    process.exit(0);
-  } catch (error) {
-    console.log(error);
-    process.exit(1);
-  }
-};
-
-runMain();
+console.log("Transactions deployed to:", await transactions.getAddress());
